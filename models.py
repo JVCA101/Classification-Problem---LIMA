@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+import numpy as np
 
 
 image_shape = (128, 128, 3)
@@ -92,3 +93,35 @@ inception = Sequential([
             Dropout(0.5),
             Dense(7, activation='softmax')
 ], name='inception')
+
+
+def models(name_model='lenet5', num_classes=7):
+    if name_model == 'lenet5':
+        return lenet5
+    elif name_model == 'alex':
+        return alex
+    elif name_model == 'vgg16':
+        return vgg16
+    elif name_model == 'inception':
+        return inception
+    elif name_model == 'resnet50':
+        return tf.keras.applications.ResNet50(
+            include_top=True,
+            weights=None,
+            input_tensor=None,
+            input_shape=(224,224,3),
+            pooling=None,
+            classes=num_classes
+        )
+    elif name_model == 'densenet':
+        return tf.keras.applications.DenseNet121(
+            include_top=True,
+            weights=None,
+            input_tensor=None,
+            input_shape=(224,224,3),
+            pooling=None,
+            classes=num_classes
+        )
+    else:
+        return None
+
