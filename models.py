@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropou
 import numpy as np
 
 
-image_shape = (128, 128, 3)
+image_shape = (224, 224, 3)
 
 # LeNet-5
 lenet5 = Sequential([
@@ -104,24 +104,6 @@ def models(name_model='lenet5', num_classes=7):
         return vgg16
     elif name_model == 'inception':
         return inception
-    elif name_model == 'resnet50':
-        return tf.keras.applications.ResNet50(
-            include_top=True,
-            weights=None,
-            input_tensor=None,
-            input_shape=(224,224,3),
-            pooling=None,
-            classes=num_classes
-        )
-    elif name_model == 'densenet':
-        return tf.keras.applications.DenseNet121(
-            include_top=True,
-            weights=None,
-            input_tensor=None,
-            input_shape=(224,224,3),
-            pooling=None,
-            classes=num_classes
-        )
     else:
         return None
 

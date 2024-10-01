@@ -18,22 +18,19 @@ import os
 def main(name_model):
     batch_size = 16
 
-    if name_model == "resnet50" or name_model == "densenet":
-        image_shape = (224, 224, 3)
-    else:
-        image_shape = (128, 128, 3)
+    image_shape = (224, 224, 3)
 
 
     train_ds = tf.keras.utils.image_dataset_from_directory(
         os.getcwd() + '/Train',
-        image_size=(128,128),
+        image_size=(224,224),
         batch_size=batch_size,
         label_mode = 'categorical'
     )
 
     test_ds = tf.keras.utils.image_dataset_from_directory(
         os.getcwd() + '/Test',
-        image_size=(128,128),
+        image_size=(224,224),
         batch_size=batch_size,
         label_mode = 'categorical'
     )
@@ -42,10 +39,6 @@ def main(name_model):
 
     class_names = train_ds.class_names
     print(class_names)
-
-    normalization_layer = tf.keras.layers.Rescaling(1./255)
-
-    normalized_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
 
 
 
@@ -72,7 +65,6 @@ def main(name_model):
     # write loss and accuracy to file
     f = open("output/acc_loss.txt", "a")
     f.write(model.name + " " + str(test_loss) + " ")
-    #TODO write accuracy for each class
     y_pred = model.predict(test_ds)
     y_pred = np.argmax(y_pred, axis=1)
     y_true = []
@@ -83,7 +75,7 @@ def main(name_model):
     def class_accuracy(y_true, y_pred, class_label):
         indices = y_true == class_label
         return metrics.accuracy_score(y_true[indices], y_pred[indices])
-    
+
     accuracies = {}
     for class_label in range(num_classes):
         acc = class_accuracy(y_true, y_pred, class_label)
@@ -94,7 +86,6 @@ def main(name_model):
 
     f.write(str(test_acc) + "\n")
     f.close()
-
 
     # plot
     epochs = range(1, len(train_acc) + 1)
@@ -110,7 +101,7 @@ def main(name_model):
     plt.legend()
     plt.savefig("output/" + model.name + "_loss.png")
 
-    plt.show()
+    # plt.show()
 
 
     # confusion matrix
@@ -130,5 +121,5 @@ main("lenet5")
 main("alex")
 main("vgg16")
 main("inception")
-main("resnet50")
-main("densenet")
+# main("resnet50")
+# main("densenet")
